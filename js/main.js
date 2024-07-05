@@ -139,6 +139,29 @@ if (hasGetUserMedia()) {
   console.warn("getUserMedia() is not supported by your browser")
 }
 
+function clientConsoleLog(log_content)
+{
+    console.log(log_content);
+}
+
+function enter_fullscreen()
+{
+    clientConsoleLog("Entering fullscreen");
+    
+    /* Get the documentElement (<html>) to display the page in fullscreen */
+    var elem = document.documentElement;
+    
+    /* When the openFullscreen() function is executed, open the video in fullscreen.
+    Note that we must include prefixes for different browsers, as they don't support the requestFullscreen method yet */
+    if (elem.requestFullscreen) {
+        elem.requestFullscreen();
+    } else if (elem.webkitRequestFullscreen) { /* Safari */
+        elem.webkitRequestFullscreen();
+    } else if (elem.msRequestFullscreen) { /* IE11 */
+        elem.msRequestFullscreen();
+    }
+}
+
 // Enable the live webcam view and start detection.
 function enableCam(event) {
   if (!gestureRecognizer) {
@@ -164,6 +187,8 @@ function enableCam(event) {
     video.srcObject = stream
     video.addEventListener("loadeddata", predictWebcam)
   })
+
+  // enter_fullscreen();
 }
 
 let lastVideoTime = -1

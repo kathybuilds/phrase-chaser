@@ -9,8 +9,8 @@ let gestureRecognizer
 let runningMode = "IMAGE"
 let enableWebcamButton
 let webcamRunning = false
-const videoHeight = "360px"
-const videoWidth = "480px"
+const videoHeight = "1440px"//"360px"
+const videoWidth = "1920px"//"480px"
 
 // Before we can use HandLandmarker class we must wait for it to finish
 // loading. Machine Learning models can be large and take a moment to
@@ -62,7 +62,8 @@ async function handleClick(event) {
 
   // View results in the console to see their format
   console.log(results)
-  if (results.gestures.length > 0) {
+  if (results.gestures.length > 0)
+  {
     const p = event.target.parentNode.childNodes[3]
     p.setAttribute("class", "info")
 

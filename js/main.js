@@ -38,19 +38,23 @@ createGestureRecognizer()
 const video = document.getElementById("webcam")
 const canvasElement = document.getElementById("output_canvas")
 const canvasCtx = canvasElement.getContext("2d")
-const gestureOutput = document.getElementById("gesture_output")
+//const gestureOutput = document.getElementById("gesture_output")
 
 // Check if webcam access is supported.
-function hasGetUserMedia() {
+function hasGetUserMedia()
+{
   return !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia)
 }
 
 // If webcam supported, add event listener to button for when user
 // wants to activate it.
-if (hasGetUserMedia()) {
+if (hasGetUserMedia())
+  {
   enableWebcamButton = document.getElementById("webcamButton")
   enableWebcamButton.addEventListener("click", enableCam)
-} else {
+}
+else
+{
   console.warn("getUserMedia() is not supported by your browser")
 }
 
@@ -78,16 +82,21 @@ function enter_fullscreen()
 }
 
 // Enable the live webcam view and start detection.
-function enableCam(event) {
-  if (!gestureRecognizer) {
+function enableCam(event)
+{
+  if (!gestureRecognizer)
+    {
     alert("Please wait for gestureRecognizer to load")
     return
   }
 
-  if (webcamRunning === true) {
+  if (webcamRunning === true)
+  {
     webcamRunning = false
     enableWebcamButton.innerText = "ENABLE PREDICTIONS"
-  } else {
+  }
+  else
+  {
     webcamRunning = true
     enableWebcamButton.innerText = "DISABLE PREDICTIONS"
   }
@@ -108,15 +117,22 @@ function enableCam(event) {
 
 let lastVideoTime = -1
 let results = undefined
-async function predictWebcam() {
+
+async function predictWebcam()
+{
   const webcamElement = document.getElementById("webcam")
+
   // Now let's start detecting the stream.
-  if (runningMode === "IMAGE") {
+  if (runningMode === "IMAGE")
+  {
     runningMode = "VIDEO"
     await gestureRecognizer.setOptions({ runningMode: "VIDEO" })
   }
+  
   let nowInMs = Date.now()
-  if (video.currentTime !== lastVideoTime) {
+  
+  if (video.currentTime !== lastVideoTime)
+  {
     lastVideoTime = video.currentTime
     results = gestureRecognizer.recognizeForVideo(video, nowInMs)
   }
@@ -130,8 +146,10 @@ async function predictWebcam() {
   canvasElement.style.width = videoWidth
   webcamElement.style.width = videoWidth
 
-  if (results.landmarks) {
-    for (const landmarks of results.landmarks) {
+  if (results.landmarks)
+  {
+    for (const landmarks of results.landmarks)
+    {
       drawingUtils.drawConnectors(
         landmarks,
         GestureRecognizer.HAND_CONNECTIONS,
@@ -146,21 +164,28 @@ async function predictWebcam() {
       })
     }
   }
+
   canvasCtx.restore()
-  if (results.gestures.length > 0) {
-    gestureOutput.style.display = "block"
-    gestureOutput.style.width = videoWidth
-    const categoryName = results.gestures[0][0].categoryName
-    const categoryScore = parseFloat(
-      results.gestures[0][0].score * 100
-    ).toFixed(2)
-    const handedness = results.handednesses[0][0].displayName
-    gestureOutput.innerText = `GestureRecognizer: ${categoryName}\n Confidence: ${categoryScore} %\n Handedness: ${handedness}`
-  } else {
-    gestureOutput.style.display = "none"
-  }
+
+  // if (results.gestures.length > 0)
+  // {
+  //   gestureOutput.style.display = "block"
+  //   gestureOutput.style.width = videoWidth
+  //   const categoryName = results.gestures[0][0].categoryName
+  //   const categoryScore = parseFloat(
+  //     results.gestures[0][0].score * 100
+  //   ).toFixed(2)
+  //   const handedness = results.handednesses[0][0].displayName
+  //   gestureOutput.innerText = `GestureRecognizer: ${categoryName}\n Confidence: ${categoryScore} %\n Handedness: ${handedness}`
+  // }
+  // else
+  // {
+  //   gestureOutput.style.display = "none"
+  // }
+
   // Call this function again to keep predicting when the browser is ready.
-  if (webcamRunning === true) {
+  if (webcamRunning === true)
+  {
     window.requestAnimationFrame(predictWebcam)
   }
 }
